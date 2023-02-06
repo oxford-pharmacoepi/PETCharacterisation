@@ -166,9 +166,10 @@ cdm$motherTable %>%
             missing = as.character(sum(as.integer(is.na(pregnancy_bmi_fix))))) %>%
   mutate(var="Pregnancy BMI, mean (SD)") %>%
   collect()) %>%
-  select("var", "Characteristic", "missing")
+  select("var", "Characteristic", "missing") %>%
+  mutate(db=db_name)
 
-write.csv(table_one, here::here("results","table_one.csv"))
+write.csv(table_one, here::here("results",paste0("table_one_",db_name ,".csv")))
 
 
 # table two ----
