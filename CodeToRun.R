@@ -1,5 +1,10 @@
 library(CDMConnector)
 library(dplyr)
+library(ggplot2)
+library(readr)
+
+# Database name ----
+db_name <- "SIDIAP"
 
 # Database connection details -----
 server_dbi<-Sys.getenv("SERVER_DBI")
@@ -31,7 +36,10 @@ results_database_schema<-Sys.getenv("DB_WRITE_SCHEMA")
 cdm <- CDMConnector::cdm_from_con(con = db,
                                   cdm_schema = cdm_database_schema,
                                   write_schema = results_database_schema)
+
+# fill in table names for your database
 cdm$motherTable <- tbl(db, sql("SELECT * FROM omop22t2_cmbd.pregnancy_episode"))
+cdm$fetusTable <- tbl(db, sql("SELECT * FROM omop22t2_cmbd. ...."))
 
-
+source("summary_pet.R")
 
