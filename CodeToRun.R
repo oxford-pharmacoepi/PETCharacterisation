@@ -39,7 +39,8 @@ cdm <- CDMConnector::cdm_from_con(con = db,
 
 # fill in table names for your database
 cdm$motherTable <- tbl(db, sql("SELECT * FROM omop22t2_cmbd.pregnancy_episode"))
-cdm$fetusTable <- tbl(db, sql("SELECT * FROM omop22t2_cmbd. ...."))
+cdm$babyTable <- tbl(db, sql("SELECT * FROM omop22t2_cmbd. ...."))
 
-source("summary_pet.R")
+#go to summarise_results and adapt the pregnancy year range
+source("summary_results.R")
 

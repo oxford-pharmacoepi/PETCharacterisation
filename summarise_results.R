@@ -1,11 +1,18 @@
+
+
+source("summary_pet.R")
+
+
+library(ggplot2)
+
 # figure 1 ----
-figure_1_data_sidiap <- readr::read_csv(
-  here::here("results", paste0("figure_1_data_SIDIAP.csv")),
+figure_1_data_mock <- readr::read_csv(
+  here::here("results", paste0("figure_1_data_mock.csv")),
   show_col_types = FALSE) %>%
   filter(pregnancy_year > 2006 & pregnancy_year < 2022)
 
 # combine results
-figure_1_data <- bind_rows(figure_1_data_sidiap) # add dbs here
+figure_1_data <- bind_rows(figure_1_data_mock) # add dbs here with comma in between
 
 figure_1_data %>%
   ggplot(aes(pregnancy_year, n, colour=db)) +
@@ -15,58 +22,70 @@ figure_1_data %>%
   xlab("Year of pregnancy start date")+
   ylim(0, NA)+
   theme(legend.title = element_blank())
-# ggsave("figure_1.png")
+
+# save file, either use tempdir() or replace tempdir() with your desired folder path
+ggsave("figure_1.png", path = tempdir(), dpi = 300)
 
 # figure 2 ----
-figure_2_data_sidiap <- readr::read_csv(
-  here::here("results", paste0("figure_2_data_SIDIAP.csv")),
+figure_2_data_mock <- readr::read_csv(
+  here::here("results", paste0("figure_2_data_mock.csv")),
   show_col_types = FALSE) %>%
   filter(pregnancy_year > 2006 & pregnancy_year < 2022)
 
 # combine results
-figure_2_data <- bind_rows(figure_2_data_sidiap) # add dbs here
+figure_2_data <- bind_rows(figure_2_data_mock) # add dbs here with comma in between
 
 figure_2_data %>%
-  ggplot(aes(pregnancy_year, prop, colour=concept_name)) +
+  ggplot(aes(pregnancy_year,percentage, colour=concept_name)) +
   geom_line() +
   geom_point() +
   theme_bw() +
   facet_grid(. ~ db) +
   xlab("Year of pregnacy start date") +
-  ylim(0, 1)+
+  ylim(0, 100)+
   theme(legend.title = element_blank())
+
+# save file, either use tempdir() or replace tempdir() with your desired folder path
+ggsave("figure_2.png", path = tempdir(), dpi = 300)
 
 
 # figure 3 ----
-figure_3_data_sidiap <- readr::read_csv(
-  here::here("results", paste0("figure_3_data_SIDIAP.csv")),
+figure_3_data_mock <- readr::read_csv(
+  here::here("results", paste0("figure_3_data_mock.csv")),
   show_col_types = FALSE) %>%
   filter(pregnancy_year > 2006 & pregnancy_year < 2022)
 
 # combine results
-figure_3_data <- bind_rows(figure_3_data_sidiap) # add dbs here
+figure_3_data <- bind_rows(figure_3_data_mock) # add dbs here
 
 figure_3_data %>%
-  ggplot(aes(pregnancy_year, prop, colour=concept_name)) +
+  ggplot(aes(pregnancy_year,percentage, colour=concept_name)) +
   geom_line() +
   geom_point() +
   theme_bw() +
   facet_grid(. ~ db) +
   xlab("Year of pregnacy start date") +
-  ylim(0, 1)+
+  ylim(0, 100)+
   theme(legend.title = element_blank())
 
-
+# save file, either use tempdir() or replace tempdir() with your desired folder path
+ggsave("figure_3.png", path = tempdir(), dpi = 300)
 
 
 # figure 4 ----
-figure_4_data_sidiap <- readr::read_csv(
-  here::here("results", paste0("figure_4_data_SIDIAP.csv")),
+
+figure_4_data_mock <-
+  readr::read_csv(
+  here::here("results", paste0("figure_4_data_mock.csv")),
   show_col_types = FALSE) %>%
-  filter(pregnancy_year > 2006 & pregnancy_year < 2022)
+  dplyr::mutate(
+    pregnancy_year = format(.data$pregnancy_end_date, "%Y")
+  ) %>%
+  dplyr::filter(.data$pregnancy_year %in% 2010:2020)
+
 
 # combine results
-figure_4_data <- bind_rows(figure_4_data_sidiap) # add dbs here
+figure_4_data <- bind_rows(figure_4_data_mock) # add dbs here
 
 figure_4_data %>%
   collect() %>%
