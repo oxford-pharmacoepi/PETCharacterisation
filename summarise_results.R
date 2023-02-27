@@ -8,8 +8,7 @@ library(ggplot2)
 # figure 1 ----
 figure_1_data_mock <- readr::read_csv(
   here::here("results", paste0("figure_1_data_mock.csv")),
-  show_col_types = FALSE) %>%
-  filter(pregnancy_year > 2006 & pregnancy_year < 2022)
+  show_col_types = FALSE)
 
 # combine results
 figure_1_data <- bind_rows(figure_1_data_mock) # add dbs here with comma in between
@@ -29,8 +28,7 @@ ggsave("figure_1.png", path = tempdir(), dpi = 300)
 # figure 2 ----
 figure_2_data_mock <- readr::read_csv(
   here::here("results", paste0("figure_2_data_mock.csv")),
-  show_col_types = FALSE) %>%
-  filter(pregnancy_year > 2006 & pregnancy_year < 2022)
+  show_col_types = FALSE)
 
 # combine results
 figure_2_data <- bind_rows(figure_2_data_mock) # add dbs here with comma in between
@@ -52,8 +50,7 @@ ggsave("figure_2.png", path = tempdir(), dpi = 300)
 # figure 3 ----
 figure_3_data_mock <- readr::read_csv(
   here::here("results", paste0("figure_3_data_mock.csv")),
-  show_col_types = FALSE) %>%
-  filter(pregnancy_year > 2006 & pregnancy_year < 2022)
+  show_col_types = FALSE)
 
 # combine results
 figure_3_data <- bind_rows(figure_3_data_mock) # add dbs here
@@ -77,11 +74,7 @@ ggsave("figure_3.png", path = tempdir(), dpi = 300)
 figure_4_data_mock <-
   readr::read_csv(
   here::here("results", paste0("figure_4_data_mock.csv")),
-  show_col_types = FALSE) %>%
-  dplyr::mutate(
-    pregnancy_year = format(.data$pregnancy_end_date, "%Y")
-  ) %>%
-  dplyr::filter(.data$pregnancy_year %in% 2010:2020)
+  show_col_types = FALSE) %>%  collect()
 
 
 # combine results

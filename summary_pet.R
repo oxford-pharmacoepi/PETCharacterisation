@@ -1,22 +1,25 @@
 library(dplyr)
-library(lubridate)
 
-cdm$motherTable <-cdm$motherTable %>%
+motherTable <-cdm$motherTable %>%
   mutate(pregnancy_bmi_fix=ifelse(pregnancy_bmi == 0, NA,
-                                  pregnancy_bmi))
+                                  pregnancy_bmi)) %>% collect() %>%
+  dplyr::mutate(
+    pregnancy_year = format(pregnancy_end_date, "%Y")
+  ) %>%
+  dplyr::filter(pregnancy_year %in% 2010:2020) %>% collect()
 
-motherTable <- cdm$motherTable %>% collect()
+concept <-cdm$concept %>% collect()
 
 # table one ----
 table_one <- bind_rows(
   # n pregnancies
-cdm$motherTable %>% tally() %>%
+motherTable %>% tally() %>%
   mutate(n=as.character(n)) %>%
   rename("Characteristic"="n") %>%
   mutate(missing = NA) %>%
   mutate(var="N Pregnancies") %>% collect() ,
 # n unique women
-cdm$motherTable %>%
+motherTable %>%
   select("person_id") %>%
   distinct() %>%
   tally() %>%
@@ -25,14 +28,14 @@ cdm$motherTable %>%
   mutate(missing = NA) %>%
   mutate(var="N women") %>% collect(),
 # Period of pregnancies captured
-cdm$motherTable %>% collect() %>%
+motherTable %>% collect() %>%
   summarise(Characteristic= paste0(min(pregnancy_start_date, na.rm = TRUE),
                                    " to ",
                                    max(pregnancy_start_date, na.rm = TRUE)),
             missing = as.integer(sum(as.integer(is.na(pregnancy_start_date))))) %>%
   mutate(var="Period of pregnancies captured") %>% collect(),
 # Gestational length
-cdm$motherTable %>% collect() %>%
+motherTable %>% collect() %>%
   summarise(Characteristic= paste0(median(gestational_length_in_day),
                                    " [",
                                    quantile(gestational_length_in_day, 0.25),
@@ -43,14 +46,14 @@ cdm$motherTable %>% collect() %>%
   mutate(var="Gestational length, median (IQR)") %>%
   collect(),
 # Pregnancy outcome
-cdm$motherTable %>% collect()  %>%
+motherTable %>% collect()  %>%
   summarise(missing = as.integer(sum(as.integer(is.na(pregnancy_outcome)))),
             Characteristic= as.character(nrow(motherTable) - as.integer(sum(as.integer(is.na(pregnancy_outcome)))))) %>%
   mutate(var="Pregnancy outcome, n (%)") %>% collect(),
-cdm$motherTable %>%
+motherTable %>%
   group_by(pregnancy_outcome) %>%
   rename("concept_id"="pregnancy_outcome") %>%
-  left_join(cdm$concept,
+  left_join(concept,
             by="concept_id") %>%
   select("concept_id", "concept_name") %>%
   rename("var"="concept_name") %>%
@@ -60,14 +63,14 @@ cdm$motherTable %>%
   mutate("Characteristic"=as.character(Characteristic)) %>%
   mutate(missing = NA) %>% collect(),
 # mode of delivery
-cdm$motherTable %>% collect()  %>%
+motherTable %>% collect()  %>%
   summarise(missing = as.integer(sum(as.integer(is.na(pregnancy_mode_delivery)))),
             Characteristic= as.character(nrow(motherTable) - as.integer(sum(as.integer(is.na(pregnancy_mode_delivery)))))) %>%
   mutate(var="Pregnancy mode of delivery, n (%)") %>% collect(),
-cdm$motherTable %>%
+motherTable %>%
   group_by(pregnancy_mode_delivery) %>%
   rename("concept_id"="pregnancy_mode_delivery") %>%
-  left_join(cdm$concept,
+  left_join(concept,
             by="concept_id") %>%
   select("concept_id", "concept_name") %>%
   rename("var"="concept_name") %>%
@@ -77,14 +80,14 @@ cdm$motherTable %>%
   mutate("Characteristic"=as.character(Characteristic)) %>%
   mutate(missing = NA) %>% collect(),
 # pregnancy single
-cdm$motherTable %>% collect()  %>%
+motherTable %>% collect()  %>%
   summarise(missing = as.integer(sum(as.integer(is.na(pregnancy_single)))),
             Characteristic= as.character(nrow(motherTable) - as.integer(sum(as.integer(is.na(pregnancy_single)))))) %>%
   mutate(var="Single Pregnancy n (%)") %>% collect(),
-cdm$motherTable %>%
+motherTable %>%
   group_by(pregnancy_single) %>%
   rename("concept_id"="pregnancy_single") %>%
-  left_join(cdm$concept,
+  left_join(concept,
             by="concept_id") %>%
   select("concept_id", "concept_name") %>%
   rename("var"="concept_name") %>%
@@ -94,14 +97,14 @@ cdm$motherTable %>%
   mutate("Characteristic"=as.character(Characteristic)) %>%
   mutate(missing = NA) %>% collect(),
 # marital status
-cdm$motherTable %>% collect()  %>%
+motherTable %>% collect()  %>%
   summarise(missing = as.integer(sum(as.integer(is.na(pregnancy_marital_status)))),
             Characteristic= as.character(nrow(motherTable) - as.integer(sum(as.integer(is.na(pregnancy_marital_status)))))) %>%
   mutate(var="Marital status, n (%)") %>% collect(),
-cdm$motherTable %>%
+motherTable %>%
   group_by(pregnancy_marital_status) %>%
   rename("concept_id"="pregnancy_marital_status") %>%
-  left_join(cdm$concept,
+  left_join(concept,
             by="concept_id") %>%
   select("concept_id", "concept_name") %>%
   rename("var"="concept_name") %>%
@@ -111,7 +114,7 @@ cdm$motherTable %>%
   mutate("Characteristic"=as.character(Characteristic)) %>%
   mutate(missing = NA) %>% collect(),
 # pregnancy_number_fetuses
-cdm$motherTable %>% collect() %>%
+motherTable %>% collect() %>%
   summarise(Characteristic= paste0(median(pregnancy_number_fetuses),
                                    " [",
                                    min(pregnancy_number_fetuses, na.rm=T), ", ",
@@ -124,7 +127,7 @@ cdm$motherTable %>% collect() %>%
   mutate(var="Number of fetuses, median (min, IQR, max)") %>%
   collect(),
 # pregnancy_number_liveborn
-cdm$motherTable %>% collect() %>%
+motherTable %>% collect() %>%
   summarise(Characteristic= paste0(median(pregnancy_number_liveborn),
                                    " [",
                                    min(pregnancy_number_liveborn, na.rm=T), ", ",
@@ -137,14 +140,14 @@ cdm$motherTable %>% collect() %>%
   mutate(var="Number of liveborn, median (min, IQR, max)")%>%
   collect(),
 # parity
-cdm$motherTable %>% collect() %>%
+motherTable %>% collect() %>%
   summarise(missing = as.integer(sum(as.integer(is.na(prev_pregnancy_parity)))),
             Characteristic= as.character(nrow(motherTable) - as.integer(sum(as.integer(is.na(prev_pregnancy_parity)))))) %>%
   mutate(var="Previous parity, n (%)") %>% collect(),
-cdm$motherTable %>%
+motherTable %>%
   group_by(prev_pregnancy_parity) %>%
   rename("concept_id"="prev_pregnancy_parity") %>%
-  left_join(cdm$concept,
+  left_join(concept,
             by="concept_id") %>%
   select("concept_id", "concept_name") %>%
   rename("var"="concept_name") %>%
@@ -154,7 +157,7 @@ cdm$motherTable %>%
   mutate("Characteristic"=as.character(Characteristic)) %>%
   mutate(missing = NA) %>% collect(),
 # gravidity
-cdm$motherTable %>%  collect() %>%
+motherTable %>%  collect() %>%
   summarise(Characteristic= paste0(median(prev_pregnancy_gravidity),
                                    " [",
                                    min(prev_pregnancy_gravidity, na.rm=T), ", ",
@@ -167,7 +170,7 @@ cdm$motherTable %>%  collect() %>%
   mutate(var="Previous gravidity, median (min, IQR, max)") %>%
   collect(),
 # BMI
-cdm$motherTable %>% collect() %>%
+motherTable %>% collect() %>%
   summarise(Characteristic= paste0(round(mean(pregnancy_bmi_fix),1), " (",
                                    round(sd(pregnancy_bmi_fix), 1),
                                    ")"),
@@ -189,13 +192,17 @@ write.csv(table_one, here::here("results",paste0("table_one_",db_name ,".csv")))
 # table two ----
 if(db_name != "SIDIAP") {
 
-  cdm$babyTable <-cdm$babyTable %>%
+  babyTable <-cdm$babyTable %>%
     mutate(birth_weight_fix=ifelse(birth_weight == 0, NA,
-                                   birth_weight))
+                                   birth_weight)) %>% collect() %>%
+    right_join(select(motherTable,
+                            pregnancy_id),multiple = "all",
+              by = c("pregnancy_id"))
+
 
 table_two <- bind_rows(
   # n pregnancies
-  cdm$babyTable %>%
+  babyTable %>%
     select("pregnancy_id") %>%
     distinct() %>%
     tally() %>%
@@ -204,7 +211,7 @@ table_two <- bind_rows(
     mutate(missing = NA) %>%
     mutate(var="N Pregnancies") %>% collect(),
   # n unique fetus
-  cdm$babyTable %>%
+  babyTable %>%
     select("fetus_id") %>%
     distinct() %>%
     tally() %>%
@@ -213,14 +220,14 @@ table_two <- bind_rows(
     mutate(missing = NA) %>%
     mutate(var="N fetus") %>% collect(),
   # Birth outcome
-  cdm$babyTable %>% collect() %>%
+  babyTable %>% collect() %>%
     summarise(missing = as.integer(sum(as.integer(is.na(birth_outcome)))),
               Characteristic= as.character(nrow(motherTable) - as.integer(sum(as.integer(is.na(birth_outcome)))))) %>%
     mutate(var="Birth outcome, n (%)") %>% collect(),
-  cdm$babyTable %>%
+  babyTable %>%
     group_by(birth_outcome) %>%
     rename("concept_id"="birth_outcome") %>%
-    left_join(cdm$concept,
+    left_join(concept,
               by="concept_id") %>%
     select("concept_id", "concept_name") %>%
     rename("var"="concept_name") %>%
@@ -230,7 +237,7 @@ table_two <- bind_rows(
     mutate("Characteristic"= as.character(Characteristic)) %>%
     mutate(missing = NA) %>% collect(),
   # Birth weight
-  cdm$babyTable %>% collect() %>%
+  babyTable %>% collect() %>%
     summarise(Characteristic= paste0(median(birth_weight_fix),
                                      " [",
                                      quantile(birth_weight_fix, 0.25),
@@ -241,14 +248,14 @@ table_two <- bind_rows(
     mutate(var="Birth weight, median (IQR)") %>%
     collect(),
   # birth_con_malformation
-  cdm$babyTable %>% collect() %>%
+  babyTable %>% collect() %>%
     summarise(missing = as.integer(sum(as.integer(is.na(birth_con_malformation)))),
               Characteristic= as.character(nrow(motherTable) - as.integer(sum(as.integer(is.na(birth_con_malformation)))))) %>%
     mutate(var="Congenital malformations, n (%)") %>% collect(),
-  cdm$babyTable %>%
+  babyTable %>%
     group_by(birth_con_malformation) %>%
     rename("concept_id"="birth_con_malformation") %>%
-    left_join(cdm$concept,
+    left_join(concept,
               by="concept_id") %>%
     select("concept_id", "concept_name") %>%
     rename("var"="concept_name") %>%
@@ -258,14 +265,14 @@ table_two <- bind_rows(
     mutate("Characteristic"=as.character(Characteristic)) %>%
     mutate(missing = NA) %>% collect(),
   # birth_sga
-  cdm$babyTable %>% collect() %>%
+  babyTable %>% collect() %>%
     summarise(missing = as.integer(sum(as.integer(is.na(birth_sga)))),
               Characteristic= as.character(nrow(motherTable) - as.integer(sum(as.integer(is.na(birth_sga)))))) %>%
     mutate(var="Small for gestational age, n (%)") %>% collect(),
-  cdm$babyTable %>%
+  babyTable %>%
     group_by(birth_sga) %>%
     rename("concept_id"="birth_sga") %>%
-    left_join(cdm$concept,
+    left_join(concept,
               by="concept_id") %>%
     select("concept_id", "concept_name") %>%
     rename("var"="concept_name") %>%
@@ -275,14 +282,14 @@ table_two <- bind_rows(
     mutate("Characteristic"=as.character(Characteristic)) %>%
     mutate(missing = NA) %>% collect(),
   # birth_fgr
-  cdm$babyTable %>% collect() %>%
+  babyTable %>% collect() %>%
     summarise(missing = as.integer(sum(as.integer(is.na(birth_fgr)))),
               Characteristic= as.character(nrow(motherTable) - as.integer(sum(as.integer(is.na(birth_fgr)))))) %>%
     mutate(var="Fetal growth restriction, n (%)") %>% collect(),
-  cdm$babyTable %>%
+  babyTable %>%
     group_by(birth_fgr) %>%
     rename("concept_id"="birth_fgr") %>%
-    left_join(cdm$concept,
+    left_join(concept,
               by="concept_id") %>%
     select("concept_id", "concept_name") %>%
     rename("var"="concept_name") %>%
@@ -292,7 +299,7 @@ table_two <- bind_rows(
     mutate("Characteristic"=as.character(Characteristic)) %>%
     mutate(missing = NA) %>% collect(),
   # birth_apgar
-  cdm$babyTable %>% collect() %>%
+  babyTable %>% collect() %>%
     summarise(Characteristic= paste0(median(birth_apgar),
                                      " [",
                                      quantile(birth_apgar, 0.25),
@@ -305,13 +312,14 @@ table_two <- bind_rows(
   select("var", "Characteristic", "missing") %>%
   mutate_at(c("missing"), ~ ifelse(is.na(missing),0,.))
 
-write.csv(table_two, here::here("results","table_two.csv"))
+write.csv(table_one, here::here("results",paste0("table_two_",db_name ,".csv")))
 }
 
 
 
+
 # figure 1 data  -----
-figure_1_data <- cdm$motherTable %>%
+figure_1_data <- motherTable %>%
   select(person_id, pregnancy_start_date) %>%
   collect() %>%
   mutate(pregnancy_year = lubridate::year(pregnancy_start_date)) %>%
@@ -327,9 +335,9 @@ write.csv(figure_1_data,
 
 
 # figure 2 data  -----
-figure_2_data <- cdm$motherTable %>%
+figure_2_data <- motherTable %>%
   group_by(person_id, pregnancy_start_date, pregnancy_mode_delivery) %>%
-  left_join(cdm$concept,
+  left_join(concept,
             by=c("pregnancy_mode_delivery"="concept_id")) %>%
   select("person_id", "pregnancy_start_date", "pregnancy_mode_delivery",
          "concept_name") %>%
@@ -350,14 +358,14 @@ write.csv(figure_2_data,
                             paste0("figure_2_data_", db_name, ".csv")))
 
 # figure 3 data  -----
-figure_3_data <- cdm$motherTable %>%
+figure_3_data <- motherTable %>%
   group_by(person_id, pregnancy_start_date, pregnancy_outcome) %>%
-  left_join(cdm$concept,
+  left_join(concept,
             by=c("pregnancy_outcome"="concept_id")) %>%
   select("person_id", "pregnancy_start_date", "pregnancy_outcome",
-         "concept_name") %>%
-  dplyr::mutate(
-    pregnancy_year = format(.data$pregnancy_start_date, "%Y")
+         "concept_name") %>% collect() %>%
+  mutate(
+    pregnancy_year = format(pregnancy_start_date, "%Y")
   ) %>%
   group_by(pregnancy_year, pregnancy_outcome, concept_name) %>%
   count() %>%
@@ -382,14 +390,13 @@ write.csv(figure_3_data,
 
 
 # figure 4 data  -----
-figure_4_data <- cdm$motherTable %>%
+figure_4_data <- motherTable %>%
   filter(gestational_length_in_day<300) %>%
   filter(gestational_length_in_day!=0) %>%
-  left_join(cdm$concept,
+  left_join(concept,
             by=c("pregnancy_outcome"="concept_id")) %>%
   select(gestational_length_in_day, pregnancy_outcome,
-         concept_name,pregnancy_start_date)%>%
-  collect()
+         concept_name,pregnancy_start_date) %>% collect()
 
 weeks <- seq(0,320, 7)
 figure_4_data$week <- NA

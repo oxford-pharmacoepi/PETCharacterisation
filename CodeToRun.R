@@ -4,7 +4,7 @@ library(ggplot2)
 library(readr)
 
 # Database name ----
-db_name <- "SIDIAP"
+db_name <- "mock"
 
 # Database connection details -----
 server_dbi<-Sys.getenv("SERVER_DBI")
@@ -41,6 +41,6 @@ cdm <- CDMConnector::cdm_from_con(con = db,
 cdm$motherTable <- tbl(db, sql("SELECT * FROM omop22t2_cmbd.pregnancy_episode"))
 cdm$babyTable <- tbl(db, sql("SELECT * FROM omop22t2_cmbd. ...."))
 
-#go to summarise_results and adapt the pregnancy year range
-source("summary_results.R")
+#go to summary_pet.R and adapt the pregnancy year range (pregnancy_end_date counts for the classification of pregnancy year)
+source("summarise_results.R")
 
