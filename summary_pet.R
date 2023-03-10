@@ -36,11 +36,11 @@ table_one <- bind_rows(
     mutate(var="Period of pregnancies captured") %>% collect(),
   # Gestational length
   motherTable %>% collect() %>%
-    summarise(Characteristic= paste0(median(gestational_length_in_day, na.rm=T),
+    summarise(Characteristic= paste0(median(gestational_length_in_day,na.rm=TRUE),
                                      " [",
-                                     quantile(gestational_length_in_day, 0.25, na.rm=T),
+                                     quantile(gestational_length_in_day, 0.25,na.rm=TRUE),
                                      " to ",
-                                     quantile(gestational_length_in_day, 0.75, na.rm=T),
+                                     quantile(gestational_length_in_day, 0.75,na.rm=TRUE),
                                      "]"),
               missing = as.integer(sum(as.integer(is.na(gestational_length_in_day))))) %>%
     mutate(var="Gestational length, median (IQR)") %>%
@@ -115,26 +115,26 @@ table_one <- bind_rows(
     mutate(missing = NA) %>% collect(),
   # pregnancy_number_fetuses
   motherTable %>% collect() %>%
-    summarise(Characteristic= paste0(median(pregnancy_number_fetuses, na.rm=T),
+    summarise(Characteristic= paste0(median(pregnancy_number_fetuses, na.rm=TRUE),
                                      " [",
-                                     min(pregnancy_number_fetuses, na.rm=T), ", ",
-                                     quantile(pregnancy_number_fetuses, 0.25, na.rm=T),
+                                     min(pregnancy_number_fetuses, na.rm=TRUE), ", ",
+                                     quantile(pregnancy_number_fetuses, 0.25, na.rm=TRUE),
                                      " to ",
-                                     quantile(pregnancy_number_fetuses, 0.75, na.rm=T), ", ",
-                                     max(pregnancy_number_fetuses, na.rm=T),
+                                     quantile(pregnancy_number_fetuses, 0.75, na.rm=TRUE), ", ",
+                                     max(pregnancy_number_fetuses, na.rm=TRUE),
                                      "]"),
               missing = as.integer(sum(as.integer(is.na(pregnancy_number_fetuses)))))%>%
     mutate(var="Number of fetuses, median (min, IQR, max)") %>%
     collect(),
   # pregnancy_number_liveborn
   motherTable %>% collect() %>%
-    summarise(Characteristic= paste0(median(pregnancy_number_liveborn, na.rm=T),
+    summarise(Characteristic= paste0(median(pregnancy_number_liveborn, na.rm=TRUE),
                                      " [",
-                                     min(pregnancy_number_liveborn, na.rm=T), ", ",
-                                     quantile(pregnancy_number_liveborn, 0.25, na.rm=T),
+                                     min(pregnancy_number_liveborn, na.rm=TRUE), ", ",
+                                     quantile(pregnancy_number_liveborn, 0.25, na.rm=TRUE),
                                      " to ",
-                                     quantile(pregnancy_number_liveborn, 0.75, na.rm=T), ", ",
-                                     max(pregnancy_number_liveborn, na.rm=T),
+                                     quantile(pregnancy_number_liveborn, 0.75, na.rm=TRUE), ", ",
+                                     max(pregnancy_number_liveborn, na.rm=TRUE),
                                      "]"),
               missing = as.integer(sum(as.integer(is.na(pregnancy_number_liveborn))))) %>%
     mutate(var="Number of liveborn, median (min, IQR, max)")%>%
@@ -158,13 +158,13 @@ table_one <- bind_rows(
     mutate(missing = NA) %>% collect(),
   # gravidity
   motherTable %>%  collect() %>%
-    summarise(Characteristic= paste0(median(prev_pregnancy_gravidity, na.rm=T),
+    summarise(Characteristic= paste0(median(prev_pregnancy_gravidity, na.rm=TRUE),
                                      " [",
-                                     min(prev_pregnancy_gravidity, na.rm=T), ", ",
-                                     quantile(prev_pregnancy_gravidity, 0.25, na.rm=T),
+                                     min(prev_pregnancy_gravidity, na.rm=TRUE), ", ",
+                                     quantile(prev_pregnancy_gravidity, 0.25, na.rm=TRUE),
                                      " to ",
-                                     quantile(prev_pregnancy_gravidity, 0.75, na.rm=T), ", ",
-                                     max(prev_pregnancy_gravidity, na.rm=T),
+                                     quantile(prev_pregnancy_gravidity, 0.75, na.rm=TRUE), ", ",
+                                     max(prev_pregnancy_gravidity, na.rm=TRUE),
                                      "]"),
               missing = as.integer(sum(as.integer(is.na(prev_pregnancy_gravidity)))))%>%
     mutate(var="Previous gravidity, median (min, IQR, max)") %>%
@@ -238,11 +238,11 @@ if(db_name != "SIDIAP") {
       mutate(missing = NA) %>% collect(),
     # Birth weight
     babyTable %>% collect() %>%
-      summarise(Characteristic= paste0(median(birth_weight_fix, na.rm=T),
+      summarise(Characteristic= paste0(median(birth_weight_fix, na.rm=TRUE),
                                        " [",
-                                       quantile(birth_weight_fix, 0.25, na.rm=T),
+                                       quantile(birth_weight_fix, 0.25, na.rm=TRUE),
                                        " to ",
-                                       quantile(birth_weight_fix, 0.75, na.rm=T),
+                                       quantile(birth_weight_fix, 0.75, na.rm=TRUE),
                                        "]"),
                 missing = as.integer(sum(as.integer(is.na(birth_weight_fix))))) %>%
       mutate(var="Birth weight, median (IQR)") %>%
@@ -300,11 +300,11 @@ if(db_name != "SIDIAP") {
       mutate(missing = NA) %>% collect(),
     # birth_apgar
     babyTable %>% collect() %>%
-      summarise(Characteristic= paste0(median(birth_apgar, na.rm=T),
+      summarise(Characteristic= paste0(median(birth_apgar, na.rm=TRUE),
                                        " [",
-                                       quantile(birth_apgar, 0.25, na.rm=T),
+                                       quantile(birth_apgar, 0.25, na.rm=TRUE),
                                        " to ",
-                                       quantile(birth_apgar, 0.75, na.rm=T),
+                                       quantile(birth_apgar, 0.75, na.rm=TRUE),
                                        "]"),
                 missing = as.integer(sum(as.integer(is.na(birth_apgar))))) %>%
       mutate(var="Birth weight, median (IQR)") %>%
@@ -420,5 +420,3 @@ figure_4_data <- figure_4_data %>%
 write.csv(figure_4_data,
           file = here::here("results",
                             paste0("figure_4_data_", db_name, ".csv")))
-
-
