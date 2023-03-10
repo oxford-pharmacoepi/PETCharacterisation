@@ -27,7 +27,7 @@ figure_2_data_sidiap <- readr::read_csv(
 figure_2_data <- bind_rows(figure_2_data_sidiap) # add dbs here
 
 figure_2_data %>%
-  ggplot(aes(pregnancy_year, prop, colour=concept_name)) +
+  ggplot(aes(pregnancy_year, percentage, colour=concept_name)) +
   geom_line() +
   geom_point() +
   theme_bw() +
@@ -47,7 +47,7 @@ figure_3_data_sidiap <- readr::read_csv(
 figure_3_data <- bind_rows(figure_3_data_sidiap) # add dbs here
 
 figure_3_data %>%
-  ggplot(aes(pregnancy_year, prop, colour=concept_name)) +
+  ggplot(aes(pregnancy_year, percentage, colour=concept_name)) +
   geom_line() +
   geom_point() +
   theme_bw() +
