@@ -10,14 +10,14 @@ figure_1_data_mock <- readr::read_csv(
   show_col_types = FALSE)
 
 # combine results
-figure_1_data <- bind_rows(figure_1_data_mock) # add dbs here with comma in between
+figure_1_data <- bind_rows(figure_1_data_mock) # remove mock and add dbs here with comma in between
 
 figure_1_data %>%
   ggplot(aes(pregnancy_year, n, colour=db)) +
   geom_line() +
   geom_point() +
   theme_bw() +
-  xlab("Year of pregnancy start date")+
+  xlab("Year of pregnancy end date")+
   ylim(0, NA)+
   theme(legend.title = element_blank())
 
@@ -30,7 +30,7 @@ figure_2_data_mock <- readr::read_csv(
   show_col_types = FALSE)
 
 # combine results
-figure_2_data <- bind_rows(figure_2_data_mock) # add dbs here with comma in between
+figure_2_data <- bind_rows(figure_2_data_mock) # remove mock and add dbs here with comma in between
 
 figure_2_data %>%
   ggplot(aes(pregnancy_year,percentage, colour=concept_name)) +
@@ -38,7 +38,7 @@ figure_2_data %>%
   geom_point() +
   theme_bw() +
   facet_grid(. ~ db) +
-  xlab("Year of pregnacy start date") +
+  xlab("Year of pregnacy end date") +
   ylim(0, 100)+
   theme(legend.title = element_blank())
 
@@ -52,7 +52,7 @@ figure_3_data_mock <- readr::read_csv(
   show_col_types = FALSE)
 
 # combine results
-figure_3_data <- bind_rows(figure_3_data_mock) # add dbs here
+figure_3_data <- bind_rows(figure_3_data_mock) # remove mock and add dbs here with comma in between
 
 figure_3_data %>%
   ggplot(aes(pregnancy_year,percentage, colour=concept_name)) +
@@ -60,7 +60,7 @@ figure_3_data %>%
   geom_point() +
   theme_bw() +
   facet_grid(. ~ db) +
-  xlab("Year of pregnacy start date") +
+  xlab("Year of pregnacy end date") +
   ylim(0, 100)+
   theme(legend.title = element_blank())
 
@@ -77,7 +77,7 @@ figure_4_data_mock <-
 
 
 # combine results
-figure_4_data <- bind_rows(figure_4_data_mock) # add dbs here
+figure_4_data <- bind_rows(figure_4_data_mock) # remove mock and add dbs here with comma in between
 
 figure_4_data %>%
   collect() %>%

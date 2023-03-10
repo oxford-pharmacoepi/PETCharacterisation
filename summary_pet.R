@@ -2,10 +2,9 @@ library(dplyr)
 
 motherTable <-cdm$motherTable %>%
   mutate(pregnancy_bmi_fix=ifelse(pregnancy_bmi == 0, NA,
-                                  pregnancy_bmi)) %>% collect() %>%
-  dplyr::mutate(
-    pregnancy_year = format(pregnancy_end_date, "%Y")
-  ) %>%
+                                  pregnancy_bmi),
+         pregnancy_year = format(pregnancy_end_date, "%Y")
+         ) %>%
   dplyr::filter(pregnancy_year %in% 2010:2020) %>% collect()
 
 concept <-cdm$concept %>% collect()
@@ -320,9 +319,7 @@ if(db_name != "SIDIAP") {
 
 # figure 1 data  -----
 figure_1_data <- motherTable %>%
-  select(person_id, pregnancy_start_date) %>%
-  collect() %>%
-  mutate(pregnancy_year = lubridate::year(pregnancy_start_date)) %>%
+  select("person_id", "pregnancy_year") %>%
   group_by(pregnancy_year) %>%
   count() %>%
   mutate(db=db_name)
@@ -336,12 +333,11 @@ write.csv(figure_1_data,
 
 # figure 2 data  -----
 figure_2_data <- motherTable %>%
-  group_by(person_id, pregnancy_start_date, pregnancy_mode_delivery) %>%
+  group_by(person_id, pregnancy_year, pregnancy_mode_delivery) %>%
   left_join(concept,
             by=c("pregnancy_mode_delivery"="concept_id")) %>%
-  select("person_id", "pregnancy_start_date", "pregnancy_mode_delivery",
-         "concept_name") %>%
-  mutate(pregnancy_year = lubridate::year(pregnancy_start_date)) %>%
+  select("person_id", "pregnancy_year", "pregnancy_mode_delivery",
+         "concept_name")  %>%
   group_by(pregnancy_year, pregnancy_mode_delivery, concept_name) %>%
   count() %>%
   collect()
@@ -359,14 +355,11 @@ write.csv(figure_2_data,
 
 # figure 3 data  -----
 figure_3_data <- motherTable %>%
-  group_by(person_id, pregnancy_start_date, pregnancy_outcome) %>%
+  group_by(person_id, pregnancy_year, pregnancy_outcome) %>%
   left_join(concept,
             by=c("pregnancy_outcome"="concept_id")) %>%
-  select("person_id", "pregnancy_start_date", "pregnancy_outcome",
+  select("person_id", "pregnancy_year", "pregnancy_outcome",
          "concept_name") %>% collect() %>%
-  mutate(
-    pregnancy_year = format(pregnancy_start_date, "%Y")
-  ) %>%
   group_by(pregnancy_year, pregnancy_outcome, concept_name) %>%
   count() %>%
   collect()
@@ -396,7 +389,7 @@ figure_4_data <- motherTable %>%
   left_join(concept,
             by=c("pregnancy_outcome"="concept_id")) %>%
   select(gestational_length_in_day, pregnancy_outcome,
-         concept_name,pregnancy_start_date) %>% collect()
+         concept_name,pregnancy_year) %>% collect()
 
 weeks <- seq(0,320, 7)
 figure_4_data$week <- NA
