@@ -221,7 +221,7 @@ if(db_name != "SIDIAP") {
     # Birth outcome
     babyTable %>% collect() %>%
       summarise(missing = as.integer(sum(as.integer(is.na(birth_outcome)))),
-                Characteristic= as.character(nrow(motherTable) - as.integer(sum(as.integer(is.na(birth_outcome)))))) %>%
+                Characteristic= as.character(nrow(babyTable) - as.integer(sum(as.integer(is.na(birth_outcome)))))) %>%
       mutate(var="Birth outcome, n (%)") %>% collect(),
     babyTable %>%
       group_by(birth_outcome) %>%
@@ -249,7 +249,7 @@ if(db_name != "SIDIAP") {
     # birth_con_malformation
     babyTable %>% collect() %>%
       summarise(missing = as.integer(sum(as.integer(is.na(birth_con_malformation)))),
-                Characteristic= as.character(nrow(motherTable) - as.integer(sum(as.integer(is.na(birth_con_malformation)))))) %>%
+                Characteristic= as.character(nrow(babyTable) - as.integer(sum(as.integer(is.na(birth_con_malformation)))))) %>%
       mutate(var="Congenital malformations, n (%)") %>% collect(),
     babyTable %>%
       group_by(birth_con_malformation) %>%
@@ -266,7 +266,7 @@ if(db_name != "SIDIAP") {
     # birth_sga
     babyTable %>% collect() %>%
       summarise(missing = as.integer(sum(as.integer(is.na(birth_sga)))),
-                Characteristic= as.character(nrow(motherTable) - as.integer(sum(as.integer(is.na(birth_sga)))))) %>%
+                Characteristic= as.character(nrow(babyTable) - as.integer(sum(as.integer(is.na(birth_sga)))))) %>%
       mutate(var="Small for gestational age, n (%)") %>% collect(),
     babyTable %>%
       group_by(birth_sga) %>%
@@ -283,7 +283,7 @@ if(db_name != "SIDIAP") {
     # birth_fgr
     babyTable %>% collect() %>%
       summarise(missing = as.integer(sum(as.integer(is.na(birth_fgr)))),
-                Characteristic= as.character(nrow(motherTable) - as.integer(sum(as.integer(is.na(birth_fgr)))))) %>%
+                Characteristic= as.character(nrow(babyTable) - as.integer(sum(as.integer(is.na(birth_fgr)))))) %>%
       mutate(var="Fetal growth restriction, n (%)") %>% collect(),
     babyTable %>%
       group_by(birth_fgr) %>%
