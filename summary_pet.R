@@ -306,12 +306,12 @@ if(db_name != "SIDIAP") {
                                        quantile(birth_apgar, 0.75, na.rm=TRUE),
                                        "]"),
                 missing = as.integer(sum(as.integer(is.na(birth_apgar))))) %>%
-      mutate(var="Birth weight, median (IQR)") %>%
+      mutate(var="APGAR score, median (IQR)") %>%
       collect())  %>%
     select("var", "Characteristic", "missing") %>%
     mutate_at(c("missing"), ~ ifelse(is.na(missing),0,.))
 
-  write.csv(table_one, here::here("results",paste0("table_two_",db_name ,".csv")))
+  write.csv(table_two, here::here("results",paste0("table_two_",db_name ,".csv")))
 }
 
 
