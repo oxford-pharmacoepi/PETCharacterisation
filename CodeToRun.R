@@ -32,14 +32,13 @@ vocabulary_database_schema<-cdm_database_schema
 results_database_schema<-Sys.getenv("DB_WRITE_SCHEMA")
 
 # create cdm reference ----
-# cdm <- cdm_From_Con(db, cdm_schema = cdm_schema)
 cdm <- CDMConnector::cdm_from_con(con = db,
                                   cdm_schema = cdm_database_schema,
                                   write_schema = results_database_schema)
 
 # fill in table names for your database
-cdm$motherTable <- tbl(db, sql("SELECT * FROM omop22t2_cmbd.pregnancy_episode"))
-cdm$babyTable <- tbl(db, sql("SELECT * FROM omop22t2_cmbd. ...."))
+cdm$motherTable <- tbl(db, sql("SELECT * FROM CDM_NAME.TABLE_NAME"))
+cdm$babyTable <- tbl(db, sql("SELECT * FROM CDM_NAME.TABLE_NAME"))
 
 #go to summary_pet.R and adapt the pregnancy year range (pregnancy_end_date counts for the classification of pregnancy year)
 source("summarise_results.R")
