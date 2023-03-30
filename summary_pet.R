@@ -3,7 +3,7 @@ library(dplyr)
 motherTable <-cdm$motherTable %>%
   mutate(pregnancy_bmi_fix=ifelse(pregnancy_bmi == 0, NA,
                                   pregnancy_bmi),
-         pregnancy_year = date_part('year', pregnancy_end_date)
+         pregnancy_year = date_part('year', pregnancy_start_date)
          ) %>%
   dplyr::filter(pregnancy_year %in% 2010:2020) %>% collect()
 
