@@ -17,7 +17,7 @@ figure_1_data %>%
   geom_line() +
   geom_point() +
   theme_bw() +
-  xlab("Year of pregnancy end date")+
+  xlab("Year of pregnancy start date")+
   ylim(0, NA)+
   theme(legend.title = element_blank())
 
@@ -38,7 +38,7 @@ figure_2_data %>%
   geom_point() +
   theme_bw() +
   facet_grid(. ~ db) +
-  xlab("Year of pregnacy end date") +
+  xlab("Year of pregnacy start date") +
   ylim(0, 100)+
   theme(legend.title = element_blank())
 
@@ -60,7 +60,7 @@ figure_3_data %>%
   geom_point() +
   theme_bw() +
   facet_grid(. ~ db) +
-  xlab("Year of pregnacy end date") +
+  xlab("Year of pregnacy start date") +
   ylim(0, 100)+
   theme(legend.title = element_blank())
 
