@@ -170,8 +170,8 @@ table_one <- bind_rows(
     collect(),
   # BMI
   motherTable %>% collect() %>%
-    summarise(Characteristic= paste0(round(mean(pregnancy_bmi_fix),1), " (",
-                                     round(sd(pregnancy_bmi_fix), 1),
+    summarise(Characteristic= paste0(round(mean(pregnancy_bmi_fix, na.rm = TRUE),1), " (",
+                                     round(sd(pregnancy_bmi_fix, na.rm = TRUE), 1),
                                      ")"),
               missing = as.integer(sum(as.integer(is.na(pregnancy_bmi_fix))))) %>%
     mutate(var="BMI, mean (SD)") %>%
