@@ -15,8 +15,8 @@ figure_1_data <- bind_rows(figure_1_data_mock) # remove mock and add dbs here wi
 
 figure_1_data %>%
   ggplot(aes(pregnancy_year, n, colour=db)) +
-  geom_bar() +
   geom_point() +
+  geom_line() +
   theme_bw() +
   xlab("Year of pregnancy start date")+
   ylim(0, NA)+
