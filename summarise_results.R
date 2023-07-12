@@ -6,12 +6,16 @@ library(ggplot2)
 
 
 # figure 1 ----
-figure_1_data_mock <- readr::read_csv(
-  here::here("results", paste0("figure_1_data_mock.csv")),
-  show_col_types = FALSE)
+assign(paste0("figure_1_data_", db_name), readr::read_csv(
+  here::here("results", paste0("figure_1_data_", db_name, ".csv")),
+  show_col_types = FALSE))
+
+figure_1_data <- bind_rows(mget(paste0("figure_1_data_", db_name)))
 
 # combine results
-figure_1_data <- bind_rows(figure_1_data_mock) # remove mock and add dbs here with comma in between
+# add dbs here with comma in between if there are several
+# figure_1_data <- bind_rows(figure_1_data_db1, figure_1_data_db2, ... )
+
 
 figure_1_data %>%
   ggplot(aes(pregnancy_year, n, colour=db)) +
@@ -25,13 +29,19 @@ figure_1_data %>%
 # save file, either use tempdir() or replace tempdir() with your desired folder path
 ggsave("figure_1.png", path = tempdir(), dpi = 300)
 
+
 # figure 2 ----
-figure_2_data_mock <- readr::read_csv(
-  here::here("results", paste0("figure_2_data_mock.csv")),
-  show_col_types = FALSE)
+assign(paste0("figure_2_data_", db_name), readr::read_csv(
+  here::here("results", paste0("figure_2_data_", db_name, ".csv")),
+  show_col_types = FALSE))
+
+figure_2_data <- bind_rows(mget(paste0("figure_2_data_", db_name)))
 
 # combine results
-figure_2_data <- bind_rows(figure_2_data_mock) # remove mock and add dbs here with comma in between
+# add dbs here with comma in between if there are several
+# figure_2_data <- bind_rows(figure_2_data_db1, figure_2_data_db2, ... )
+
+
 
 figure_2_data %>%
   ggplot(aes(pregnancy_year,percentage, fill=concept_name)) +
@@ -45,13 +55,19 @@ figure_2_data %>%
 ggsave("figure_2.png", path = tempdir(), dpi = 300)
 
 
+
 # figure 3 ----
-figure_3_data_mock <- readr::read_csv(
-  here::here("results", paste0("figure_3_data_mock.csv")),
-  show_col_types = FALSE)
+assign(paste0("figure_3_data_", db_name), readr::read_csv(
+  here::here("results", paste0("figure_3_data_", db_name, ".csv")),
+  show_col_types = FALSE))
+
+figure_3_data <- bind_rows(mget(paste0("figure_3_data_", db_name)))
 
 # combine results
-figure_3_data <- bind_rows(figure_3_data_mock) # remove mock and add dbs here with comma in between
+# add dbs here with comma in between if there are several
+# figure_3_data <- bind_rows(figure_3_data_db1, figure_3_data_db2, ... )
+
+
 
 figure_3_data %>%
   ggplot(aes(pregnancy_year,percentage, fill=concept_name)) +
@@ -65,16 +81,19 @@ figure_3_data %>%
 ggsave("figure_3.png", path = tempdir(), dpi = 300)
 
 
+
 # figure 4 ----
+assign(paste0("figure_4_data_", db_name), readr::read_csv(
+  here::here("results", paste0("figure_4_data_", db_name, ".csv")),
+  show_col_types = FALSE))
 
-figure_4_data_mock <-
-  readr::read_csv(
-    here::here("results", paste0("figure_4_data_mock.csv")),
-    show_col_types = FALSE) %>%  collect()
-
+figure_4_data <- bind_rows(mget(paste0("figure_4_data_", db_name)))
 
 # combine results
-figure_4_data <- bind_rows(figure_4_data_mock) # remove mock and add dbs here with comma in between
+# add dbs here with comma in between if there are several
+# figure_4_data <- bind_rows(figure_4_data_db1, figure_4_data_db2, ... )
+
+
 
 figure_4_data %>%
   collect() %>%
@@ -82,3 +101,4 @@ figure_4_data %>%
   geom_col(aes(week, n))+
   theme_bw() +
   facet_grid(concept_name ~ db , scales = "free_y")
+
